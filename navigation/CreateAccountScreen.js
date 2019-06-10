@@ -1,14 +1,59 @@
-//this should be the create account screen if there is no token
-
-
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
+import {Button, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import t from 'tcomb-form-native';
 import { MonoText } from '../components/StyledText';
 
-export default function HomeScreen() {
-  return (
+let Gender = t.enums({
+  M: "Male",
+  F: "Female",
+})
+
+const Form = t.form.Form
+
+const options = {
+  email: {
+      error: 'Please enter an email address.  This will be your username'
+    },
+  password: {
+    error: 'Your passwords do not match'
+  },
+  "confirm password": {
+    error: 'Your passwords do not match'
+  },
+  fields: {
+    terms: {
+      label: 'Agree to Terms',
+      error: 'You must agree to the Terms'
+    },
+  },
+};
+
+const User = t.struct({
+  email: t.String,
+  password: t.String,
+  "confirm password": t.String,
+  birthdate: t.Date,
+  gender: Gender, //enum
+  terms: t.Boolean
+})
+
+export default class HomeScreen extends React.Component {
+  constructor() {
+    super()
+  }
+
+  toLoginPage = () => {
+    console.log("Navigate to Login Account")
+    this.props.navigation.navigate('Login')
+  }
+  createAccountSubmit = () => {
+    console.log("Submitted Create Account")
+    this.props.navigation.navigate('App')
+  }
+
+  render() {
+    return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
@@ -25,69 +70,42 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
+          <TouchableOpacity style={styles.helpLink}>
+            <Text style={styles.helpLinkText} onPress={this.toLoginPage}>
               Back to Login
             </Text>
           </TouchableOpacity>
         </View>
-        
-        <View style={styles.getStartedContainer}>
-          <Text style={styles.getStartedText}>Create Account Form</Text>
-          <Text style={styles.helpLinkText}>
-            Submit
-          </Text>
+
+        <View style={styles.formContainer}>
+          <Form
+            type={User}
+            options={options}
+            />
+          <Button title="Create Account" onPress={this.createAccountSubmit}/>
         </View>
 
       </ScrollView>
 
-    </View>
-  );
+    </View>);
+  }
 }
 
 HomeScreen.navigationOptions = {
   header: null,
 };
 
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
-  }
-}
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  formContainer: {
+    justifyContent: 'center',
+    marginTop: 50,
+    padding: 25,
+    backgroundColor: '#ffffff',
   },
   developmentModeText: {
     marginBottom: 20,

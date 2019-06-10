@@ -8,9 +8,7 @@ import { MonoText } from '../components/StyledText';
 export default function LinksScreen() {
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+
         <View style={styles.welcomeContainer}>
           <Image
             source={
@@ -25,7 +23,7 @@ export default function LinksScreen() {
         <View style={styles.getStartedContainer}>
           <Text style={styles.getStartedText}>This is where a match card will be</Text>
         </View>
-      </ScrollView>
+
     </View>
   );
 }

@@ -7,7 +7,7 @@ import {Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} f
 
 import { MonoText } from '../components/StyledText';
 
-export default function HomeScreen() {
+export default function MessagesScreen() {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -25,18 +25,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.getStartedContainer}>
-          <Text style={styles.getStartedText}>Login Form</Text>
-          <Text style={styles.helpLinkText}>
-            Submit
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Create an Account
-            </Text>
-          </TouchableOpacity>
+          <Text style={styles.getStartedText}>THIS IS WHERE MESSAGES WILL BE</Text>
         </View>
       </ScrollView>
 
@@ -44,7 +33,7 @@ export default function HomeScreen() {
   );
 }
 
-HomeScreen.navigationOptions = {
+MessagesScreen.navigationOptions = {
   header: null,
 };
 

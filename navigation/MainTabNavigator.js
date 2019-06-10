@@ -6,29 +6,15 @@ import {
 } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import MessagesScreen from '../screens/MessagesScreen';
+import MatchesScreen from '../screens/MatchesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
-const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+const MessagesStack = createStackNavigator({
+  Messages: MessagesScreen,
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'HOME',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-};
-
-HomeStack.navigationOptions = {
+MessagesStack.navigationOptions = {
   tabBarLabel: 'MESSAGES',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -42,12 +28,12 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const MatchesStack = createStackNavigator({
+  Matches: MatchesScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'MATCH',
+MatchesStack.navigationOptions = {
+  tabBarLabel: 'MATCHES',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -71,7 +57,7 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
+  MessagesStack,
+  MatchesStack,
   SettingsStack,
 });
