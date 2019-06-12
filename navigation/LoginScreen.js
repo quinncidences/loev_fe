@@ -7,17 +7,6 @@ import {Card, Icon, Input, CheckBox} from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios'
 
-const options = {
-  fields:{
-    email: {
-      error: 'These credentials do not match'
-    },
-    password: {
-      password: true,
-      error: 'These credentials do not match'
-    },
-  }
-};
 
 export default class LoginScreen extends React.Component {
   constructor(props) {
