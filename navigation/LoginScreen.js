@@ -3,20 +3,15 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {Button, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { MonoText } from '../components/StyledText';
-import t from 'tcomb-form-native';
-
-const Form = t.form.Form
-
-const User = t.struct({
-  email: t.Str,
-  password: t.Str,
-})
+import {Card, Icon, Input, CheckBox} from 'react-native-elements';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios'
 
 const options = {
   fields:{
     email: {
-        error: 'These credentials do not match'
-      },
+      error: 'These credentials do not match'
+    },
     password: {
       password: true,
       error: 'These credentials do not match'
@@ -24,13 +19,70 @@ const options = {
   }
 };
 
-export default class HomeScreen extends React.Component {
-  constructor() {
-    super()
+export default class LoginScreen extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+      remember: false,
+      users: {}
+    }
   }
 
+  componentDidMount() {
+    this.userFetch()
+    this.tokenCreation()
+  }
+
+  userFetch() {
+    return fetch('https://loev-be.herokuapp.com/users')
+      .then((res) => res.json())
+      .then((users) => {
+        console.log(users);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  tokenCreation() {
+    SecureStore.getItemAsync('userinfo')
+      .then((userdata) => {
+        let userinfo = JSON.parse(userdata);
+        if (userinfo) {
+          this.setState({email: userinfo.email});
+          this.setState({password: userinfo.password});
+          this.setState({remember: true})
+        }
+      })
+  }
+
+  static navigationOptions = {
+    title: 'Login'
+  };
+
+  handleLogin() {
+    console.log(JSON.stringify(this.state))
+    if (this.state.remember) {
+      SecureStore.setItemAsync(
+        'userinfo',
+        JSON.stringify({email: this.state.email, password: this.state.password})
+      )
+      .catch((error) => console.log("Could not save user info", error));
+      //need to adjust this so that it only redirects with a successful login
+      this.props.navigation.navigate('App')
+    } else {
+      SecureStore.deleteItemAsync('userinfo')
+      .catch((error) => console.log("Could not delete user info", error))
+      //need to adjust this so that it only redirects with a successful account creation
+      this.props.navigation.navigate('App')
+    }
+
+  }
+
+
   toCreateAccountPage = () => {
-    console.log("Navigate to Create Account")
     this.props.navigation.navigate('CreateAccount')
   }
 
@@ -42,10 +94,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+      <View style={styles.container}>
         <View style={styles.welcomeContainer}>
           <Image
             source={
@@ -56,35 +105,46 @@ export default class HomeScreen extends React.Component {
             style={styles.welcomeImage}
           />
         </View>
-
-
         <View style={styles.formContainer}>
-          <Form
-            ref={c => this._form = c}
-            type={User}
-            options={options}
-          />
-          <Button title="Login" onPress={this.loginSubmit}/>
+          <Input
+            placeholder=" Email"
+            leftIcon={{ type: 'font-awesome', name: 'user-o'}}
+            onChangeText={(email) => this.setState({email})}
+            value={this.state.email}
+            containerStyle={styles.formInput}
+            />
+          <Input
+            placeholder=" Password"
+            leftIcon={{ type: 'font-awesome', name: 'key'}}
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+            containerStyle={styles.formInput}
+            />
+          <CheckBox
+            title="Remember Me"
+            center
+            checked={this.state.remember}
+            onPress={() => this.setState({remember: !this.state.remember})}
+            containerStyle={styles.formCheckbox}
+            />
+          <View style={styles.formButton}>
+            <Button
+              onPress={() => this.handleLogin()}
+              title='Login'
+              color="#512DA8"
+              />
+          </View>
         </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity style={styles.helpLink}>
-          <Text style={styles.helpLinkText} onPress={this.toCreateAccountPage}>
-          Create an Account
-          </Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
-
-    </View>
-  );
-  }
+            <View style={styles.helpContainer}>
+              <TouchableOpacity style={styles.helpLink}>
+              <Text style={styles.helpLinkText} onPress={this.toCreateAccountPage}>
+              Create an Account
+              </Text>
+              </TouchableOpacity>
+            </View>
+      </View>
+  )}
 }
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
 
 
 const styles = StyleSheet.create({
@@ -181,4 +241,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+
+
+  formInput: {
+    margin: 40
+  },
+  formCheckbox: {
+    margin: 40,
+    backgroundColor: null
+  },
+  formbutton: {
+    margin: 60
+  }
 });
