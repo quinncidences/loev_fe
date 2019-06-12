@@ -1,8 +1,11 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {Button, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Button, Image, ScrollView, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import t from 'tcomb-form-native';
 import { MonoText } from '../components/StyledText';
+import {Card, Icon, Input, CheckBox} from 'react-native-elements'
+
+
 
 let Gender = t.enums({
   M: "Male",
@@ -38,13 +41,12 @@ const User = t.struct({
   terms: t.Boolean
 })
 
-export default class HomeScreen extends React.Component {
+export default class CreateAccountScreen extends React.Component {
   constructor() {
     super()
   }
 
   toLoginPage = () => {
-    console.log("Navigate to Login Account")
     this.props.navigation.navigate('Login')
   }
   createAccountSubmit = () => {
@@ -90,10 +92,6 @@ export default class HomeScreen extends React.Component {
     </View>);
   }
 }
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
 
 
 const styles = StyleSheet.create({

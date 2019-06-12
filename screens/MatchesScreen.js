@@ -21,7 +21,10 @@ export default function LinksScreen() {
         </View>
 
         <View style={styles.getStartedContainer}>
-          <Text style={styles.getStartedText}>This is where a match card will be</Text>
+          <Image
+            style={{width: 300, height: 300}}
+            source={require('../assets/images/empty-image.png')}
+            />
         </View>
 
     </View>
