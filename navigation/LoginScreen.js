@@ -90,7 +90,7 @@ export default class LoginScreen extends React.Component {
             <Button
               onPress={() => this.loginFetch()}
               title='Login'
-              color='black'
+              color='white'
               />
           </View>
         </View>
@@ -101,7 +101,7 @@ export default class LoginScreen extends React.Component {
               </Text>
               </TouchableOpacity>
             </View>
-            
+
       </View>
   )}
 }
@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#79F7D6',
     borderWidth: 1,
     borderRadius: 12,
-    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center'

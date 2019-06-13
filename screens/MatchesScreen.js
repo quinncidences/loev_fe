@@ -11,38 +11,12 @@ export default class MatchesScreen extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      users: {},
-      current_index: '',
-      current_user: {},
-      current_cars: []
-    }
-  }
-
-  componentDidMount() {
-    this.userFetch()
-  }
-
-  userFetch() {
-    return fetch('https://loev-be.herokuapp.com/users')
-      .then((res) => res.json())
-      .then(users => {
-        this.setState ({
-          users: users,
-          current_index: users.length -1,
-          current_user: users[(users.length -1)],
-          current_cars: users[(users.length -1)].cars
-        })
-      });
   }
 
   render() {
-    if (!this.state.users) {
-      return <View />
-    }
     return (
       <View style={styles.container}>
-
+        <ScrollView>
           <View style={styles.welcomeContainer}>
             <Image
               source={
@@ -53,29 +27,8 @@ export default class MatchesScreen extends React.Component {
               style={styles.welcomeImage}
             />
           </View>
-
-          <View style={styles.getStartedContainer}>
-            <Image
-              style={{width: 300, height: 300}}
-              source={require('../assets/images/nikola_.png')}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.userInfoName}>{this.state.current_user.first_name}</Text>
-            <Text style={styles.userInfoLocation}>{this.state.current_user.current_location}</Text>
-            <Text style={styles.userInfoTagline}>{this.state.current_user.tagline}{"\n"}</Text>
-            <Text style={styles.userInfoBio}>{this.state.current_user.bio}{"\n"}</Text>
-          </View>
-
-          <View>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>Cars</Text>
-            {this.state.current_cars.map(car => {
-              return <Text style={styles.userInfoCar} key={car.id}>
-                {car.make} - {car.model} - {car.year}
-              </Text>
-            })}
-          </View>
+          <Card />
+        </ScrollView>
       </View>
     )
   }
@@ -108,32 +61,5 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
-  },
-  userInfoName: {
-    fontSize: 30,
-    lineHeight: 30,
-    textAlign: 'center'
-  },
-  userInfoLocation: {
-    fontSize: 25,
-    lineHeight: 25,
-    textAlign: 'center',
-  },
-  userInfoTagline: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    lineHeight: 20,
-    textAlign: 'center'
-  },
-  userInfoBio: {
-    fontSize: 16,
-    lineHeight: 16,
-    textAlign: 'center'
-  },
-  userInfoCar: {
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'left',
-    marginHorizontal: 10
   },
 });
