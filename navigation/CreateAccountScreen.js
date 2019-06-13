@@ -1,58 +1,60 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {Button, Image, ScrollView, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Picker, Button, Image, ScrollView, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import t from 'tcomb-form-native';
 import { MonoText } from '../components/StyledText';
 import {Card, Icon, Input, CheckBox} from 'react-native-elements'
 
 
-
-let Gender = t.enums({
-  M: "Male",
-  F: "Female",
-})
-
-const Form = t.form.Form
-
-const options = {
-  email: {
-      error: 'Please enter an email address.  This will be your username'
-    },
-  password: {
-    error: 'Your passwords do not match'
-  },
-  "confirm password": {
-    error: 'Your passwords do not match'
-  },
-  fields: {
-    terms: {
-      label: 'Agree to Terms',
-      error: 'You must agree to the Terms'
-    },
-  },
-};
-
-const User = t.struct({
-  email: t.String,
-  password: t.String,
-  "confirm password": t.String,
-  birthdate: t.Date,
-  gender: Gender, //enum
-  terms: t.Boolean
-})
-
 export default class CreateAccountScreen extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+      confirm_password: '',
+      first_name: '',
+      last_name: '',
+      gender: '',
+      dob: '',
+      location: '',
+      tagline: '',
+      bio: '',
+      interest_type: '',
+      interest_gender: '',
+      interest_distance: '',
+      users: {}
+    }
   }
+
+  componentDidMount() {
+    // this.tokenCreation()
+  }
+
+  // tokenCreation() {
+  //   SecureStore.getItemAsync('userinfo')
+  //     .then((userdata) => {
+  //       let userinfo = JSON.parse(userdata);
+  //       if (userinfo) {
+  //         this.setState({email: userinfo.email});
+  //         this.setState({password: userinfo.password});
+  //         this.setState({remember: true})
+  //       }
+  //     })
+  // }
 
   toLoginPage = () => {
     this.props.navigation.navigate('Login')
   }
-  createAccountSubmit = () => {
-    console.log("Submitted Create Account")
-    this.props.navigation.navigate('App')
+
+  handleCreateAccount = () => {
+    console.log("created account")
+      //need to adjust this so that it only redirects with a successful account creation
   }
+
+  // static navigationOptions = {
+  //   title: 'CreateAccount'
+  // };
 
   render() {
     return (
@@ -73,22 +75,83 @@ export default class CreateAccountScreen extends React.Component {
 
         <View style={styles.helpContainer}>
           <TouchableOpacity style={styles.helpLink}>
-            <Text style={styles.helpLinkText} onPress={this.toLoginPage}>
-              Back to Login
-            </Text>
+          <Text style={styles.helpLinkText} onPress={this.toLoginPage}>
+          Back to Login
+          </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.formContainer}>
-          <Form
-            type={User}
-            options={options}
+          <Input
+            placeholder=" Email"
+            leftIcon={{ type: 'font-awesome', name: 'user-o'}}
+            onChangeText={(email) => this.setState({email})}
+            value={this.state.email}
             />
-          <Button title="Create Account" onPress={this.createAccountSubmit}/>
+          <Input
+            placeholder=" Password"
+            leftIcon={{ type: 'font-awesome', name: 'key'}}
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+            secureTextEntry={true}
+            />
+          <Input
+            placeholder=" Confirm Password"
+            leftIcon={{ type: 'font-awesome', name: 'key'}}
+            onChangeText={(confirm_password) => this.setState({confirm_password})}
+            value={this.state.confirm_password}
+            secureTextEntry={true}
+            />
+          <Input
+            placeholder=" First Name"
+
+            onChangeText={(first_name) => this.setState({first_name})}
+            value={this.state.first_name}
+            />
+          <Input
+            placeholder=" Last Name"
+
+            onChangeText={(last_name) => this.setState({last_name})}
+            value={this.state.last_name}
+            />
+          <Picker
+            selectedValue={this.state.gender}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({gender: itemValue})
+            }>
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+          </Picker>
+          <Input
+            placeholder=" Location"
+
+            onChangeText={(location) => this.setState({location})}
+            value={this.state.location}
+            />
+          <Text> Profile Info </Text>
+          <Input
+            placeholder=" Tagline"
+
+            onChangeText={(location) => this.setState({location})}
+            value={this.state.location}
+            />
+          <Input
+            placeholder=" Bio"
+
+            onChangeText={(location) => this.setState({location})}
+            value={this.state.location}
+            />
+          <Text> Preferences </Text>
+
+          <View style={styles.formButton}>
+            <Button
+              onPress={() => this.handleCreateAccount()}
+              title='Create Account'
+              color='black'
+              />
+          </View>
         </View>
-
       </ScrollView>
-
     </View>);
   }
 }
@@ -103,6 +166,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 50,
     padding: 25,
+    flex: 1,
     backgroundColor: '#ffffff',
   },
   developmentModeText: {
@@ -187,4 +251,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  formCheckbox: {
+    margin: 40,
+    backgroundColor: '#ffffff'
+  },
+  formButton: {
+    margin: 60,
+    backgroundColor: '#79F7D6',
+    borderWidth: 1,
+    borderRadius: 12,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
 });

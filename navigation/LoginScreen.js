@@ -1,11 +1,10 @@
 //this should be the login account screen if there is no token
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {Button, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Button, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { MonoText } from '../components/StyledText';
 import {Card, Icon, Input, CheckBox} from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
-import axios from 'axios'
 
 
 export default class LoginScreen extends React.Component {
@@ -15,71 +14,37 @@ export default class LoginScreen extends React.Component {
       email: '',
       password: '',
       remember: false,
-      users: {}
+      here: ''
     }
   }
 
-  componentDidMount() {
-    this.userFetch()
-    this.tokenCreation()
+  loginFetch() {
+    // fetch('https://loev-be.herokuapp.com/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     user: {
+    //       "email": this.state.email,
+    //       "password": this.state.password
+    //     }
+    //   })
+    // })
+    // .then(res => res.json())
+    // .then(res => AsyncStorage.setItem('jwt', res.jwt))
+    this.props.navigation.navigate('App')
   }
 
-  userFetch() {
-    return fetch('https://loev-be.herokuapp.com/users')
-      .then((res) => res.json())
-      .then((users) => {
-        console.log(users);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  tokenCreation() {
-    SecureStore.getItemAsync('userinfo')
-      .then((userdata) => {
-        let userinfo = JSON.parse(userdata);
-        if (userinfo) {
-          this.setState({email: userinfo.email});
-          this.setState({password: userinfo.password});
-          this.setState({remember: true})
-        }
-      })
-  }
 
   static navigationOptions = {
     title: 'Login'
   };
 
-  handleLogin() {
-    console.log(JSON.stringify(this.state))
-    if (this.state.remember) {
-      SecureStore.setItemAsync(
-        'userinfo',
-        JSON.stringify({email: this.state.email, password: this.state.password})
-      )
-      .catch((error) => console.log("Could not save user info", error));
-      //need to adjust this so that it only redirects with a successful login
-      this.props.navigation.navigate('App')
-    } else {
-      SecureStore.deleteItemAsync('userinfo')
-      .catch((error) => console.log("Could not delete user info", error))
-      //need to adjust this so that it only redirects with a successful account creation
-      this.props.navigation.navigate('App')
-    }
-
-  }
-
-
   toCreateAccountPage = () => {
     this.props.navigation.navigate('CreateAccount')
   }
 
-  loginSubmit = () => {
-    const ev = this._form.getValue();
-    console.log("Submitted Login: ", ev);
-    // this.props.navigation.navigate('App')
-  }
 
   render() {
     return (
@@ -93,6 +58,11 @@ export default class LoginScreen extends React.Component {
             }
             style={styles.welcomeImage}
           />
+          <Image
+            style={{width: 70, height: 80}}
+            source={require('../assets/images/loevlogobulb.png')}
+          />
+        <Text>{"\n"} We Found Love in a Gasless Place</Text>
         </View>
         <View style={styles.formContainer}>
           <Input
@@ -100,14 +70,13 @@ export default class LoginScreen extends React.Component {
             leftIcon={{ type: 'font-awesome', name: 'user-o'}}
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
-            containerStyle={styles.formInput}
             />
           <Input
             placeholder=" Password"
             leftIcon={{ type: 'font-awesome', name: 'key'}}
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
-            containerStyle={styles.formInput}
+            secureTextEntry={true}
             />
           <CheckBox
             title="Remember Me"
@@ -115,12 +84,13 @@ export default class LoginScreen extends React.Component {
             checked={this.state.remember}
             onPress={() => this.setState({remember: !this.state.remember})}
             containerStyle={styles.formCheckbox}
+            checkedColor='#79F7D6'
             />
           <View style={styles.formButton}>
             <Button
-              onPress={() => this.handleLogin()}
+              onPress={() => this.loginFetch()}
               title='Login'
-              color="#512DA8"
+              color='black'
               />
           </View>
         </View>
@@ -131,6 +101,7 @@ export default class LoginScreen extends React.Component {
               </Text>
               </TouchableOpacity>
             </View>
+            
       </View>
   )}
 }
@@ -145,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 50,
     padding: 25,
+    flex: 1,
     backgroundColor: '#ffffff',
   },
   developmentModeText: {
@@ -230,16 +202,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
-
-
-  formInput: {
-    margin: 40
-  },
   formCheckbox: {
     margin: 40,
-    backgroundColor: null
+    backgroundColor: '#ffffff'
   },
-  formbutton: {
-    margin: 60
+  formButton: {
+    margin: 60,
+    backgroundColor: '#79F7D6',
+    borderWidth: 1,
+    borderRadius: 12,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 });

@@ -20,10 +20,37 @@ export default function SettingsScreen() {
             style={styles.welcomeImage}
           />
         </View>
+        <View style={styles.getStartedContainer}>
+          <Image
+            style={{width: 300, height: 300}}
+            source={require('../assets/images/pike.jpg')}
+          />
+        </View>
+        <View style={styles.getStartedContainer}>
+          <Text style={styles.getStartedText}>Pike Place Market{"\n"}{"\n"}</Text>
+        </View>
 
         <View style={styles.getStartedContainer}>
-          <Text style={styles.getStartedText}>This is where the hotspots will be</Text>
+          <Image
+            style={{width: 300, height: 300}}
+            source={require('../assets/images/supercharger.jpg')}
+          />
         </View>
+        <View style={styles.getStartedContainer}>
+          <Text style={styles.getStartedText}>Tesla Supercharger{"\n"}{"\n"}</Text>
+        </View>
+
+        <View style={styles.getStartedContainer}>
+          <Image
+            style={{width: 300, height: 300}}
+            source={require('../assets/images/mall.jpg')}
+          />
+        </View>
+        <View style={styles.getStartedContainer}>
+          <Text style={styles.getStartedText}>Mall of America{"\n"}{"\n"}</Text>
+        </View>
+
+
       </ScrollView>
     </View>
   );

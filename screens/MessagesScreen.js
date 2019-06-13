@@ -24,8 +24,41 @@ export default function MessagesScreen() {
           />
         </View>
 
-        <View style={styles.getStartedContainer}>
-          <Text style={styles.getStartedText}>THIS IS WHERE MESSAGES WILL BE</Text>
+
+        <View style={styles.messageContainerLeft}>
+          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 1{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerRight}>
+          <Text style={styles.getStartedTextRight}>I AM MESSAGE 2{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerLeft}>
+          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 3{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerRight}>
+          <Text style={styles.getStartedTextRight}>I AM MESSAGE 4{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerLeft}>
+          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 5{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerRight}>
+          <Text style={styles.getStartedTextRight}>I AM MESSAGE 6{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerLeft}>
+          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 7{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerRight}>
+          <Text style={styles.getStartedTextRight}>I AM MESSAGE 8{"\n"}</Text>
+        </View>
+        <View><Text></Text></View>
+        <View style={styles.messageContainerLeft}>
+          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 9{"\n"}</Text>
         </View>
       </ScrollView>
 
@@ -99,9 +132,17 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: -10,
   },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
+  messageContainerRight: {
+    backgroundColor: 'rgb(191, 255, 238)',
+    marginHorizontal: 20,
+    borderRadius: 2,
+    borderColor: 'black'
+  },
+  messageContainerLeft: {
+    backgroundColor: 'rgb(191, 255, 208)',
+    marginHorizontal: 20,
+    borderRadius: 2,
+    borderColor: 'black'
   },
   homeScreenFilename: {
     marginVertical: 7,
@@ -114,11 +155,17 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 4,
   },
-  getStartedText: {
+  getStartedTextRight: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: 'right',
+  },
+  getStartedTextLeft: {
+    fontSize: 17,
+    color: 'rgba(96,100,109, 1)',
+    lineHeight: 24,
+    textAlign: 'left',
   },
   tabBarInfoContainer: {
     position: 'absolute',
