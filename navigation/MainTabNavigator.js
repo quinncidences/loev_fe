@@ -60,4 +60,7 @@ export default createBottomTabNavigator({
   MessagesStack,
   MatchesStack,
   SettingsStack,
-});
+  },
+  {
+    initialRouteName: 'MatchesStack'
+  });
