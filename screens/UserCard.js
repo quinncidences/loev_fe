@@ -32,8 +32,8 @@ export default class UserCard extends React.Component {
           users: users,
           logged_in_user: users[0],
           pref_gender: users[0].preference.gender,
-          pref_distance: users[0].distance,
-          pref_relationship: users[0].relationship,
+          pref_distance: users[0].preference.distance,
+          pref_relationship: users[0].preference.relationship,
           current_index: users.length -1,
           current_user: users[(users.length -1)],
           current_cars: users[(users.length -1)].cars
@@ -45,21 +45,23 @@ export default class UserCard extends React.Component {
 
   }
 
-  acceptUser() {
-    //need to build in the dislike/like filters as well
+  userAction(type) {
+    if (type == "no") {
+      this.createDislike()
+    } else {
+      //I can run the function here to see if it's a match, in a conditional
+      this.createLike()
+    }
     let newIndex = this.state.current_index - 1
     if (newIndex < 0) {
-      newIndex = this.state.users.length -1
+      newIndex = this.state.users.length - 1
     }
-    while (this.state.users[newIndex].gender != this.state.pref_gender) {
-      console.log("No match @ id:", this.state.users[newIndex].id)
-      console.log("No match @ id:", this.state.users[newIndex].gender)
-      newIndex - 1
+    while (this.userFilter(newIndex)) {
+      newIndex -= 1
       if (newIndex < 0) {
         newIndex = this.state.users.length -1
       }
     }
-    console.log("Match @ id:", this.state.users[newIndex].id)
     this.setState({
       current_index: newIndex,
       current_user: this.state.users[newIndex],
@@ -67,39 +69,59 @@ export default class UserCard extends React.Component {
     })
   }
 
+  userFilter(newIndex) {
+    //need to filter out the actual logged_in_user
+    if (
+      (this.state.users[newIndex].gender != this.state.pref_gender) || (this.state.users[newIndex].preference.relationship != this.state.pref_relationship) || (this.checkLikes(newIndex) || (this.checkDislikes(newIndex)))
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
 
+  checkLikes(newIndex) {
+    let userlikes = this.state.logged_in_user.likes.filter((like) => (like.liked_id === this.state.users[newIndex].id))
+    return userlikes.length != 0 ? true : false
+  }
 
-  declineUser() {
-    console.log("Declined")
-    // if (this.state.current_index === this.state.users.length - 1) {
-    //   let newIndex = 0
-    //   while (this.state.users[newIndex].gender !== this.state.pref_gender) {
-    //     if (newIndex === 0) {
-    //       let newIndex = this.state.users.length - 1
-    //     } else {
-    //       newIndex - 1
-    //     }
-    //   }
-    //   this.setState({
-    //     current_index: newIndex,
-    //     current_user: this.state.users[newIndex],
-    //     current_cars: this.state.users[newIndex].cars
-    //   })
-    // } else {
-    //   let newIndex = this.state.current_index + 1
-    //   while (this.state.users[newIndex].gender !== this.state.pref_gender) {
-    //     if (newIndex === 0) {
-    //       let newIndex = this.state.users.length - 1
-    //     } else {
-    //       newIndex -1
-    //     }
-    //   }
-    //   this.setState({
-    //     current_index: newIndex,
-    //     current_user: this.state.users[newIndex],
-    //     current_cars: this.state.users[newIndex].cars
-    //   })
-    // }
+  checkDislikes(newIndex) {
+    let userdislikes = this.state.logged_in_user.dislikes.filter((dislike) => (dislike.disliked_id === this.state.users[newIndex].id))
+    return userdislikes.length != 0 ? true : false
+  }
+
+  createLike() {
+    fetch('https://loev-be.herokuapp.com/likes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.OdI1F5wTP70urfaKCo2pOn1txPpszCD3vVx3P3YjYbE'
+      },
+      body: JSON.stringify({
+        "user_id": this.state.logged_in_user.id,
+        "liked_id": this.state.current_user.id,
+      })
+    })
+  }
+
+  createDislike() {
+    fetch('https://loev-be.herokuapp.com/dislikes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.OdI1F5wTP70urfaKCo2pOn1txPpszCD3vVx3P3YjYbE'
+      },
+      body: JSON.stringify({
+        "user_id": this.state.logged_in_user.id,
+        "disliked_id": this.state.current_user.id,
+      })
+    })
+  }
+
+  createMatch() {
+    console.log("Creating MATCH")
   }
 
 
@@ -107,29 +129,28 @@ export default class UserCard extends React.Component {
     if (!this.state.users) {
       return <View />
     }
-    console.log(this.state.pref_gender)
     return (
       <View style={styles.container}>
 
         <View style={styles.getStartedContainer}>
           <Image
-            style={{width: 300, height: 300}}
+            style={{width: 270, height: 270}}
             source={require('../assets/images/nikola_.png')}
           />
         </View>
         <View style={styles.buttons}>
           <View style={styles.noButton}>
             <Button
-              onPress={() => this.declineUser()}
-              title='NO!'
+              onPress={() => this.userAction("no")}
+              title='N'
               color='white'
               />
           </View>
 
           <View style={styles.yesButton}>
             <Button
-              onPress={() => this.acceptUser()}
-              title='YES!'
+              onPress={() => this.userAction("yes")}
+              title='Y'
               color='white'
               />
           </View>
@@ -209,7 +230,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderRadius: 12,
     fontSize: 20,
-    width: 100,
+    width: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     alignItems: 'flex-end'
@@ -219,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     borderRadius: 12,
     fontSize: 20,
-    width: 100,
+    width: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     alignItems: 'flex-start'
