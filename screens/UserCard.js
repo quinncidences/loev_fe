@@ -9,7 +9,7 @@ export default class UserCard extends React.Component {
     super(props)
     this.state = {
       users: {},
-      logged_in_user: {}, //this should be user id 1 for now it is hardcoded
+      logged_in_user: {}, //this is hardcoded for now as the 0 index
       pref_gender: '',
       pref_distance: '',
       pref_relationship: '',
@@ -46,42 +46,60 @@ export default class UserCard extends React.Component {
   }
 
   acceptUser() {
-    console.log(this.state.current_user.id)
-    if (this.state.current_index === 0) {
-      let newIndex = this.state.users.length - 1
-      this.setState({
-        current_index: newIndex,
-        current_user: this.state.users[newIndex],
-        current_cars: this.state.users[newIndex].cars
-      })
-    } else {
-      let newIndex = this.state.current_index - 1
-      this.setState({
-        current_index: newIndex,
-        current_user: this.state.users[newIndex],
-        current_cars: this.state.users[newIndex].cars
-      })
+    //need to build in the dislike/like filters as well
+    let newIndex = this.state.current_index - 1
+    if (newIndex < 0) {
+      newIndex = this.state.users.length -1
     }
+    while (this.state.users[newIndex].gender != this.state.pref_gender) {
+      console.log("No match @ id:", this.state.users[newIndex].id)
+      console.log("No match @ id:", this.state.users[newIndex].gender)
+      newIndex - 1
+      if (newIndex < 0) {
+        newIndex = this.state.users.length -1
+      }
+    }
+    console.log("Match @ id:", this.state.users[newIndex].id)
+    this.setState({
+      current_index: newIndex,
+      current_user: this.state.users[newIndex],
+      current_cars: this.state.users[newIndex].cars
+    })
   }
 
 
+
   declineUser() {
-    console.log(this.state.current_user.id)
-    if (this.state.current_index === this.state.users.length - 1) {
-      let newIndex = 0
-      this.setState({
-        current_index: newIndex,
-        current_user: this.state.users[newIndex],
-        current_cars: this.state.users[newIndex].cars
-      })
-    } else {
-      let newIndex = this.state.current_index + 1
-      this.setState({
-        current_index: newIndex,
-        current_user: this.state.users[newIndex],
-        current_cars: this.state.users[newIndex].cars
-      })
-    }
+    console.log("Declined")
+    // if (this.state.current_index === this.state.users.length - 1) {
+    //   let newIndex = 0
+    //   while (this.state.users[newIndex].gender !== this.state.pref_gender) {
+    //     if (newIndex === 0) {
+    //       let newIndex = this.state.users.length - 1
+    //     } else {
+    //       newIndex - 1
+    //     }
+    //   }
+    //   this.setState({
+    //     current_index: newIndex,
+    //     current_user: this.state.users[newIndex],
+    //     current_cars: this.state.users[newIndex].cars
+    //   })
+    // } else {
+    //   let newIndex = this.state.current_index + 1
+    //   while (this.state.users[newIndex].gender !== this.state.pref_gender) {
+    //     if (newIndex === 0) {
+    //       let newIndex = this.state.users.length - 1
+    //     } else {
+    //       newIndex -1
+    //     }
+    //   }
+    //   this.setState({
+    //     current_index: newIndex,
+    //     current_user: this.state.users[newIndex],
+    //     current_cars: this.state.users[newIndex].cars
+    //   })
+    // }
   }
 
 
