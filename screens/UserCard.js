@@ -41,15 +41,14 @@ export default class UserCard extends React.Component {
       });
   }
 
-  setUserOptions() {
-
-  }
-
   userAction(type) {
     if (type == "no") {
       this.createDislike()
     } else {
-      //I can run the function here to see if it's a match, in a conditional
+      if (this.checkLikes(this.state.current_index)) {
+        this.createLike()
+        this.createMatch()
+      }
       this.createLike()
     }
     let newIndex = this.state.current_index - 1
@@ -96,7 +95,7 @@ export default class UserCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.OdI1F5wTP70urfaKCo2pOn1txPpszCD3vVx3P3YjYbE'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
@@ -111,7 +110,7 @@ export default class UserCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.OdI1F5wTP70urfaKCo2pOn1txPpszCD3vVx3P3YjYbE'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
@@ -121,7 +120,18 @@ export default class UserCard extends React.Component {
   }
 
   createMatch() {
-    console.log("Creating MATCH")
+    fetch('https://loev-be.herokuapp.com/matches', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
+      },
+      body: JSON.stringify({
+        "user_id": this.state.logged_in_user.id,
+        "match_id": this.state.current_user.id,
+      })
+    })
   }
 
 
