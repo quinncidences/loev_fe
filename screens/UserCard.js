@@ -1,7 +1,10 @@
 import React from 'react';
-import { Button, AsyncStorage, ScrollView, StyleSheet, View, Image, Platform, TouchableOpacity, Text } from 'react-native';
+import { Button, AsyncStorage, ScrollView, StyleSheet, View, Image, Platform, TouchableOpacity, Text, Dimensions, Animated, PanResponder } from 'react-native';
 import { MonoText } from '../components/StyledText';
 import * as SecureStore from 'expo-secure-store';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 export default class UserCard extends React.Component {
 
@@ -28,17 +31,28 @@ export default class UserCard extends React.Component {
     return fetch('https://loev-be.herokuapp.com/users')
       .then((res) => res.json())
       .then(users => {
-        this.setState ({
-          users: users,
-          logged_in_user: users[0],
-          pref_gender: users[0].preference.gender,
-          pref_distance: users[0].preference.distance,
-          pref_relationship: users[0].preference.relationship,
-          current_index: users.length -1,
-          current_user: users[(users.length -1)],
-          current_cars: users[(users.length -1)].cars
-        })
+        this.initialUserFilter(users)
       });
+  }
+
+  initialUserFilter(users) {
+    //this filter does not work for likes/dislikes at the moment
+    let logged_user = users[0]
+    f = users.filter((user) => {return user.gender == logged_user.preference.gender
+       && user.preference.relationship == logged_user.preference.relationship
+       // && !this.checkLikes(user.id) && !this.checkDislikes(user.id)
+    })
+
+    this.setState ({
+      users: f,
+      logged_in_user: users[0],
+      pref_gender: users[0].preference.gender,
+      pref_distance: users[0].preference.distance,
+      pref_relationship: users[0].preference.relationship,
+      current_index: f.length -1,
+      current_user: f[(f.length -1)],
+      current_cars: f[(f.length -1)].cars
+    })
   }
 
   userAction(type) {
@@ -71,7 +85,7 @@ export default class UserCard extends React.Component {
   userFilter(newIndex) {
     //need to filter out the actual logged_in_user
     if (
-      (this.state.users[newIndex].gender != this.state.pref_gender) || (this.state.users[newIndex].preference.relationship != this.state.pref_relationship) || (this.checkLikes(newIndex) || (this.checkDislikes(newIndex)))
+      this.state.users[newIndex].gender != this.state.pref_gender || this.state.users[newIndex].preference.relationship != this.state.pref_relationship || this.checkLikes(newIndex) || this.checkDislikes(newIndex)
     ) {
       return true
     } else {
@@ -85,7 +99,7 @@ export default class UserCard extends React.Component {
   }
 
   checkDislikes(newIndex) {
-    let userdislikes = this.state.logged_in_user.dislikes.filter((dislike) => (dislike.disliked_id === this.state.users[newIndex].id))
+    let userdislikes = this.state.logged_in_user.dislikes.filter((dislike) => dislike.disliked_id === this.state.users[newIndex].id)
     return userdislikes.length != 0 ? true : false
   }
 
