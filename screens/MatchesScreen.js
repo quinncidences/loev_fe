@@ -16,7 +16,7 @@ export default class MatchesScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView>
+
           <View style={styles.welcomeContainer}>
             <Image
               source={
@@ -28,7 +28,7 @@ export default class MatchesScreen extends React.Component {
             />
           </View>
           <Card />
-        </ScrollView>
+
       </View>
     )
   }

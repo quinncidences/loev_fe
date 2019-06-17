@@ -10,8 +10,9 @@ export default class UserCard extends React.Component {
 
   constructor(props) {
     super(props)
+    this.position = new Animated.ValueXY()
     this.state = {
-      users: {},
+      users: null,
       logged_in_user: {}, //this is hardcoded for now as the 0 index
       pref_gender: '',
       pref_distance: '',
@@ -20,11 +21,78 @@ export default class UserCard extends React.Component {
       current_user: {},
       current_cars: []
     }
-    this.userFetch = this.userFetch.bind(this)
+    this.userFetch()
+
+    this.rotate = this.position.x.interpolate({
+      inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
+      outputRange:['-10deg','0deg','10deg'],
+      extrapolate: 'clamp'
+    })
+
+    this.rotateAndTranslate = {
+      transform: [{
+        rotate: this.rotate
+      },
+      ...this.position.getTranslateTransform()
+      ]
+    }
+
+    this.likeOpacity = this.position.x.interpolate({
+      inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
+      outputRange:[0,0,1],
+      extrapolate: 'clamp'
+    })
+
+    this.dislikeOpacity = this.position.x.interpolate({
+      inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
+      outputRange:[1,0,0],
+      extrapolate: 'clamp'
+    })
+
+    this.nextCardOpacity = this.position.x.interpolate({
+      inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
+      outputRange:[1,0,1],
+      extrapolate: 'clamp'
+    })
+
+    this.nextCardScale = this.position.x.interpolate({
+      inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
+      outputRange:[1,0.7,1],
+      extrapolate: 'clamp'
+    })
+
   }
 
   componentWillMount() {
-    this.userFetch()
+    //Put the function from the turorial in here instead
+    this.PanResponder = PanResponder.create({
+      onStartShouldSetPanResponder:(ev,gestureState) => true,
+      onPanResponderMove:(ev, gestureState) => {
+        this.position.setValue({ x: gestureState.dx, y: gestureState.dy})
+      },
+      onPanResponderRelease:(ev, gestureState) => {
+        if(gestureState.dx > 130){
+          Animated.spring(this.position, {
+            toValue:{x: SCREEN_WIDTH + 100, y: gestureState.dy}
+          }).start(() => {
+            console.log("LIKED")
+            this.userAction('yes')
+          })
+        } else if(gestureState.dx < -130){
+          Animated.spring(this.position, {
+            toValue:{x: -SCREEN_WIDTH - 100, y: gestureState.dy}
+          }).start(() => {
+            console.log("DISLIKED")
+            this.userAction('no')
+          })
+        } else {
+          Animated.spring(this.position,{
+            toValue:{ x: 0, y: 0},
+            friction: 4
+          }).start()
+        }
+      }
+    })
   }
 
   userFetch() {
@@ -78,7 +146,8 @@ export default class UserCard extends React.Component {
     this.setState({
       current_index: newIndex,
       current_user: this.state.users[newIndex],
-      current_cars: this.state.users[newIndex].cars
+      current_cars: this.state.users[newIndex].cars}, () => {
+        this.position.setValue({ x: 0, y: 0 })
     })
   }
 
@@ -104,12 +173,13 @@ export default class UserCard extends React.Component {
   }
 
   createLike() {
+    console.log("Hit Create Like")
     fetch('https://loev-be.herokuapp.com/likes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
@@ -119,12 +189,13 @@ export default class UserCard extends React.Component {
   }
 
   createDislike() {
+    console.log("Hit Create Dislike")
     fetch('https://loev-be.herokuapp.com/dislikes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
@@ -139,7 +210,7 @@ export default class UserCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.1qQerJT8rUDLPLbKS8nBSqX9m2pkgU7QOovgTvprfrc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
@@ -148,6 +219,48 @@ export default class UserCard extends React.Component {
     })
   }
 
+  renderUsers = () => {
+    return this.state.users.map((user, idx) => {
+      if (idx > this.state.current_index) {
+        return null
+      } else if (idx === this.state.current_index) {
+        return(
+          <Animated.View
+            {...this.PanResponder.panHandlers}
+            key={user.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, borderRadius: 20, position: 'absolute'}]}>
+
+            <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000}}>
+              <Text style={{borderWidth:1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>YES
+              </Text>
+            </Animated.View>
+
+            <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000}}>
+              <Text style={{borderWidth:1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NO
+              </Text>
+            </Animated.View>
+
+            <Image
+              style={{ width: 300, height: 300, borderRadius: 20}}
+              source={require('../assets/images/nikola_.png')}
+              />
+            <Text style={styles.userInfoName}>{user.first_name}</Text>
+            <Text style={styles.userInfoName}>{user.id}</Text>
+            <Text style={styles.userInfoBio}>{user.bio}{"\n"}</Text>
+          </Animated.View>
+        )
+      } else {
+        return(
+          <Animated.View
+            key={user.id} style={[{opacity: this.nextCardOpacity, transform: [{scale: this.nextCardScale}], height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, borderRadius: 20, position: 'absolute'}]}>
+            <Image
+              style={{ width: 300, height: 300, borderRadius: 20}}
+              source={require('../assets/images/nikola_.png')}
+              />
+          </Animated.View>
+        )
+      }
+    })
+  }
 
   render() {
     if (!this.state.users) {
@@ -155,47 +268,9 @@ export default class UserCard extends React.Component {
     }
     return (
       <View style={styles.container}>
-
         <View style={styles.getStartedContainer}>
-          <Image
-            style={{width: 270, height: 270}}
-            source={require('../assets/images/nikola_.png')}
-          />
+          {this.renderUsers()}
         </View>
-        <View style={styles.buttons}>
-          <View style={styles.noButton}>
-            <Button
-              onPress={() => this.userAction("no")}
-              title='N'
-              color='white'
-              />
-          </View>
-
-          <View style={styles.yesButton}>
-            <Button
-              onPress={() => this.userAction("yes")}
-              title='Y'
-              color='white'
-              />
-          </View>
-        </View>
-
-        <View>
-         <Text style={styles.userInfoName}>{this.state.current_user.first_name}</Text>
-         <Text style={styles.userInfoName}>{this.state.current_user.id}</Text>
-         <Text style={styles.userInfoLocation}>{this.state.current_user.current_location}</Text>
-         <Text style={styles.userInfoTagline}>{this.state.current_user.tagline}{"\n"}</Text>
-         <Text style={styles.userInfoBio}>{this.state.current_user.bio}{"\n"}</Text>
-       </View>
-
-       <View>
-         <Text style={{fontSize: 18, fontWeight: 'bold'}}>Cars</Text>
-         {this.state.current_cars.map(car => {
-           return <Text style={styles.userInfoCar} key={car.id}>
-             {car.make} - {car.model} - {car.year}
-           </Text>
-         })}
-       </View>
       </View>
     )
   }
@@ -204,6 +279,8 @@ export default class UserCard extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
   },
   welcomeContainer: {
@@ -219,7 +296,9 @@ const styles = StyleSheet.create({
     marginLeft: -10,
   },
   getStartedContainer: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 50,
   },
   userInfoName: {
