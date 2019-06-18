@@ -103,23 +103,31 @@ export default class UserCard extends React.Component {
       });
   }
 
-  initialUserFilter(users) {
-    //this filter does not work for likes/dislikes at the moment
-    let logged_user = users[0]
-    f = users.filter((user) => {return user.gender == logged_user.preference.gender
-       && user.preference.relationship == logged_user.preference.relationship
-       // && !this.checkLikes(user.id) && !this.checkDislikes(user.id)
-    })
+  checkLikesInitial(user_id, logged_user) {
+    let userlikes = logged_user.likes.filter((like) => (like.liked_id === user.id))
+    return userlikes.length != 0 ? true : false
+  }
 
+  checkDislikesInitial(user_id, logged_user) {
+    let userdislikes = logged_user.dislikes.filter((dislike) => dislike.disliked_id === user.id)
+    return userdislikes.length != 0 ? true : false
+  }
+
+  initialUserFilter(users) {
+    let logged_user = users[0]
+    users_filtered = users.filter((user) => {return user.gender === logged_user.preference.gender
+       && user.preference.relationship === logged_user.preference.relationship
+       && !this.checkLikesInitial(user.id, logged_user) && !this.checkDislikesInitial(user.id, logged_user)
+    })
     this.setState ({
-      users: f,
+      users: users_filtered,
       logged_in_user: users[0],
       pref_gender: users[0].preference.gender,
       pref_distance: users[0].preference.distance,
       pref_relationship: users[0].preference.relationship,
-      current_index: f.length -1,
-      current_user: f[(f.length -1)],
-      current_cars: f[(f.length -1)].cars
+      current_index: users_filtered.length -1,
+      current_user: users_filtered[(users_filtered.length -1)],
+      current_cars: users_filtered[(users_filtered.length -1)].cars
     })
   }
 
