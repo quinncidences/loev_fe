@@ -130,6 +130,7 @@ export default class UserCard extends React.Component {
       if (this.checkLikes(this.state.current_index)) {
         this.createLike()
         this.createMatch()
+        this.createChat()
       }
       this.createLike()
     }
@@ -215,6 +216,23 @@ export default class UserCard extends React.Component {
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
         "match_id": this.state.current_user.id,
+      })
+    })
+  }
+
+  createChat() {
+    fetch('https://loev-be.herokuapp.com/chats', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
+      },
+      body: JSON.stringify({
+        "user_id": this.state.logged_in_user.id,
+        "user_name": this.state.logged_in_user.first_name,
+        "recipient_id": this.state.current_user.id,
+        "recipient_name": this.state.current_user.first_name,
       })
     })
   }

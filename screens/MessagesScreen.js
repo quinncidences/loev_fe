@@ -33,33 +33,6 @@ export default function MessagesScreen() {
           <Text style={styles.getStartedTextRight}>I AM MESSAGE 2{"\n"}</Text>
         </View>
         <View><Text></Text></View>
-        <View style={styles.messageContainerLeft}>
-          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 3{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerRight}>
-          <Text style={styles.getStartedTextRight}>I AM MESSAGE 4{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerLeft}>
-          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 5{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerRight}>
-          <Text style={styles.getStartedTextRight}>I AM MESSAGE 6{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerLeft}>
-          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 7{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerRight}>
-          <Text style={styles.getStartedTextRight}>I AM MESSAGE 8{"\n"}</Text>
-        </View>
-        <View><Text></Text></View>
-        <View style={styles.messageContainerLeft}>
-          <Text style={styles.getStartedTextLeft}>I AM MESSAGE 9{"\n"}</Text>
-        </View>
       </ScrollView>
 
     </View>
