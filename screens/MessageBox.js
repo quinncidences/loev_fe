@@ -4,38 +4,43 @@ import {Button, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-nat
 import { MonoText } from '../components/StyledText';
 import { withNavigation } from 'react-navigation'
 
-class ChatHeader extends React.Component {
+export default class MessageBox extends React.Component {
 
   constructor(props) {
     super(props)
   }
 
-  toMessage() {
-    this.props.navigation.navigate('ChatPage', {
-      chat: this.props.chat
-    })
+
+  renderMessage() {
+    if (this.props.message.user_id === this.props.logged) {
+      return (
+        <View >
+          <Text style={styles.getStartedTextBold}>
+            {this.props.message.content}
+          </Text>
+        </View>
+      )
+    } else {
+      return(
+        <View >
+          <Text >
+            {this.props.message.content}
+          </Text>
+        </View>
+      )
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.messageContainerLeft}>
-          <Image
-            style={{ width: 55, height: 55, zIndex: 1000}}
-            source={require('../assets/images/nikola_.png')}
-            />
-          <Button
-            onPress={() => this.toMessage()}
-            title={this.props.chat.recipient_name}
-            color='black'
-            />
+          {this.renderMessage()}
         </View>
       </View>
     )
   }
 }
-export default withNavigation(ChatHeader)
-
 
 const styles = StyleSheet.create({
   container: {
@@ -65,6 +70,13 @@ const styles = StyleSheet.create({
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
     textAlign: 'left',
+  },
+  getStartedTextBold: {
+    fontSize: 17,
+    color: 'rgba(96,100,109, 1)',
+    lineHeight: 24,
+    textAlign: 'left',
+    fontWeight: '800'
   },
 
 

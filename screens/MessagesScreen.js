@@ -26,31 +26,12 @@ export default class MessagesScreen extends React.Component {
       });
   }
 
-
-  // <ScrollView
-  //   style={styles.container}
-  //   contentContainerStyle={styles.contentContainer}/>
-  //
-  //   <View style={styles.messageContainerRight}>
-  //       this.state.chats.map(chat => {
-  //         <ChatHeader key={chat.id} chat={chat}/>
-  //       })
-  //   </View>
-  //
-  // </ScrollView>
-
-  navigateToMessage(chat) {
-    console.log("NAVIGATING")
-  }
-
   renderChats() {
-
     return this.state.chats.map((chat, idx) => {
       return(
         <ChatHeader key={chat.id} chat={chat}/>
       )
     })
-
   }
 
   render() {
