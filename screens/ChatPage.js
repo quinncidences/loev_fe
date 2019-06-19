@@ -62,13 +62,13 @@ class ChatPage extends React.Component {
     })
   }
 
-  async createMessage(ev) {
-    await fetch('https://loev-be.herokuapp.com/messages', {
+  createMessage(ev) {
+    fetch('https://loev-be.herokuapp.com/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0MX0.zsoJgMqpKjB4ZHC2TlXh_IKOou033J4_aKfJDJo1jUc'
       },
       body: JSON.stringify({
         "user_id": this.props.navigation.getParam('chat').user_id,
@@ -78,8 +78,9 @@ class ChatPage extends React.Component {
         "content": ev.nativeEvent.text
       })
     })
-    .then(res => console.log(res.json())
-    await this.setState({
+    
+
+    this.setState({
       text: ''
     })
   }
