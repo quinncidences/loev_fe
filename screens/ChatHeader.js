@@ -19,16 +19,19 @@ class ChatHeader extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.messageContainerLeft}>
-          <Image
-            style={{ width: 55, height: 55, zIndex: 1000}}
-            source={require('../assets/images/nikola_.png')}
-            />
-          <Button
-            onPress={() => this.toMessage()}
-            title={this.props.chat.recipient_name}
-            color='black'
-            />
+        <View style={{justifyContent: 'center', flexDirection:'row'}}>
+          <View style={styles.card}>
+            <Image
+              style={styles.image}
+              source={require('../assets/images/nikola_.png')}
+              />
+            <Button
+              onPress={() => this.toMessage()}
+              title={this.props.chat.recipient_name}
+              color='black'
+              style={styles.button}
+              />
+          </View>
         </View>
       </View>
     )
@@ -41,31 +44,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    margin: 20
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
+  card: {
     height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
+    width: 350,
+    borderRadius: 12,
+    borderColor: 'grey',
+    backgroundColor: '#e8e8e8',
+    flexDirection:'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  messageContainerLeft: {
-    backgroundColor: 'rgb(191, 255, 208)',
-    marginHorizontal: 20,
-    borderRadius: 2,
-    borderColor: 'black'
+  button: {
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+    alignItems: 'center',
   },
-  getStartedTextLeft: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'left',
-  },
-
-
+  image: {
+    width: 70,
+    height: 70,
+    zIndex: 1000,
+    borderRadius: 70/2,
+  }
 });

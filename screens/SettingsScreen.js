@@ -10,16 +10,6 @@ export default function SettingsScreen() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/LOEV-dev.png')
-                : require('../assets/images/LOEV-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
         <View style={styles.getStartedContainer}>
           <Image
             style={{width: 300, height: 300}}
@@ -57,7 +47,12 @@ export default function SettingsScreen() {
 }
 
 SettingsScreen.navigationOptions = {
-  header: null,
+  headerTitle: (
+    <Image
+      source={require('../assets/images/LOEV-dev.png')}
+      style={{width: 100,height: 80, resizeMode: 'contain', marginTop: 3, marginLeft: 10}}
+      />
+  )
 };
 
 const styles = StyleSheet.create({

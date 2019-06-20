@@ -11,21 +11,29 @@ export default class MessageBox extends React.Component {
   }
 
 
+  // <Text style={styles.messageUser}>
+  //   {this.props.message.content}
+  // </Text>
+
   renderMessage() {
     if (this.props.message.user_id === this.props.logged) {
       return (
-        <View >
-          <Text style={styles.getStartedTextBold}>
-            {this.props.message.content}
-          </Text>
+        <View style={styles.containerUser}>
+          <View style={styles.colorContainerUser}>
+            <Text style={styles.messageUser}>
+              {this.props.message.content}
+            </Text>
+          </View>
         </View>
       )
     } else {
       return(
-        <View >
-          <Text >
-            {this.props.message.content}
-          </Text>
+        <View style={styles.containerRec}>
+          <View style={styles.colorContainerRec}>
+            <Text style={styles.messageRec}>
+              {this.props.message.content}
+            </Text>
+          </View>
         </View>
       )
     }
@@ -33,10 +41,8 @@ export default class MessageBox extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.messageContainerLeft}>
-          {this.renderMessage()}
-        </View>
+      <View>
+        {this.renderMessage()}
       </View>
     )
   }
@@ -47,37 +53,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+  containerRec: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
+  containerUser: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
-  messageContainerLeft: {
-    backgroundColor: 'rgb(191, 255, 208)',
-    marginHorizontal: 20,
-    borderRadius: 2,
-    borderColor: 'black'
+  colorContainerUser: {
+    width: 275,
+    backgroundColor: 'rgb(121, 247, 214)',
+    borderRadius: 12,
+    margin: 10,
   },
-  getStartedTextLeft: {
+  colorContainerRec: {
+    width: 275,
+    backgroundColor: '#e8e8e8',
+    borderRadius: 12,
+    margin: 10,
+  },
+  messageUser: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
+    color: 'black',
+    lineHeight: 22,
+    margin: 3,
     textAlign: 'left',
+    overflow: 'hidden',
   },
-  getStartedTextBold: {
+  messageRec: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
+    color: 'black',
+    lineHeight: 22,
+    margin: 3,
     textAlign: 'left',
-    fontWeight: '800'
+    overflow: 'hidden',
   },
-
-
 });

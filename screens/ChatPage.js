@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, TextInput} from 'react-native';
+import {Button, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, TextInput} from 'react-native';
 import { MonoText } from '../components/StyledText';
 import { withNavigation } from 'react-navigation'
 import MessageBox from './MessageBox'
@@ -78,7 +78,7 @@ class ChatPage extends React.Component {
         "content": ev.nativeEvent.text
       })
     })
-    
+
 
     this.setState({
       text: ''
@@ -90,6 +90,10 @@ class ChatPage extends React.Component {
     // console.log("Hey")
   }
 
+  refreshMessages() {
+    this.chatFetch()
+  }
+
   render() {
     if (!this.state.messages || !this.state.recipient_chat_id) {
       return <View />
@@ -97,28 +101,46 @@ class ChatPage extends React.Component {
     const chat = this.props.navigation.getParam('chat')
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          <View style={styles.messageContainerLeft}>
-            <Image
-              style={{ width: 55, height: 55, zIndex: 1000}}
-              source={require('../assets/images/nikola_.png')}
-              />
-            <Text>{chat.recipient_name}</Text>
+          <View style={styles.header}>
+
+            <View>
+              <Button
+                title="⤺"
+                color='black'
+                onPress={() => {this.props.navigation.navigate('MessagesStack')}}
+                />
+            </View>
+
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={styles.image}
+                source={require('../assets/images/nikola_.png')}
+                />
+              <Text style={styles.user_name}>  {chat.recipient_name}</Text>
+            </View>
+
+            <View>
+              <Button
+                title="↻"
+                color='black'
+                onPress={() => this.refreshMessages()}
+                />
+            </View>
+
           </View>
-          <View style={styles.container}>
-            {this.renderMessages()}
-          </View>
+        <ScrollView>
+          {this.renderMessages()}
+        </ScrollView>
+        <View style={{flex: 1, height: 60, borderTopWidth:0.75, borderColor: '#e8e8e8'}}>
           <TextInput
-            style={styles.bottom}
+            style={styles.footer}
             value={this.state.text}
             onSubmitEditing={(ev) => this.createMessage(ev)}
             returnKeyType="send"
-            placeholder="send a message..."
+            placeholder="  send a message..."
             onChangeText={(text) => this.textState(text)}
             />
-        </ScrollView>
+        </View>
       </View>
     )
   }
@@ -130,18 +152,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
+    marginTop: 30
   },
   messageContainerLeft: {
     backgroundColor: 'rgb(191, 255, 208)',
@@ -149,10 +160,36 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderColor: 'black'
   },
-  bottom: {
+  footer: {
     flex: 1,
     fontSize: 15,
     justifyContent: 'flex-end',
-    marginBottom: 36
+    zIndex: 1000,
+    height: 60,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'white'
+  },
+  image: {
+    width: 40,
+    height: 40,
+    zIndex: 1000,
+    borderRadius: 40/2,
+  },
+  user_name: {
+    textAlign: 'center',
+    fontSize: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  header: {
+    borderBottomWidth: 0.75,
+    borderColor: 'grey',
+    justifyContent: 'space-between',
+    borderColor: '#e8e8e8',
+    flexDirection:'row',
+    alignItems: 'center'
   }
 });

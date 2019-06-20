@@ -41,13 +41,13 @@ export default class MessagesScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View >
+        </View>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
 
-          <View style={styles.messageContainerRight}>
-            {this.renderChats()}
-          </View>
+          {this.renderChats()}
 
         </ScrollView>
 
@@ -57,7 +57,12 @@ export default class MessagesScreen extends React.Component {
 }
 
 MessagesScreen.navigationOptions = {
-  header: null,
+  headerTitle: (
+    <Image
+      source={require('../assets/images/LOEV-dev.png')}
+      style={{width: 100,height: 80, resizeMode: 'contain', marginTop: 3, marginLeft: 10}}
+      />
+  )
 };
 
 

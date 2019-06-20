@@ -253,7 +253,7 @@ export default class UserCard extends React.Component {
         return(
           <Animated.View
             {...this.PanResponder.panHandlers}
-            key={user.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, borderRadius: 20, position: 'absolute'}]}>
+            key={user.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 130, width: SCREEN_WIDTH, padding: 10, borderRadius: 20, position: 'absolute', backgroundColor: '#ffffff'}]}>
 
             <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000}}>
               <Text style={{borderWidth:1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>YES
@@ -264,24 +264,30 @@ export default class UserCard extends React.Component {
               <Text style={{borderWidth:1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NO
               </Text>
             </Animated.View>
-
-            <Image
-              style={{ width: 300, height: 300, borderRadius: 20}}
-              source={require('../assets/images/nikola_.png')}
-              />
-            <Text style={styles.userInfoName}>{user.first_name}</Text>
-            <Text style={styles.userInfoName}>{user.id}</Text>
-            <Text style={styles.userInfoBio}>{user.bio}{"\n"}</Text>
+            <View style={styles.card}>
+              <Image
+                style={styles.cardImage}
+                source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/N.Tesla.JPG'}}
+                />
+              <View style={styles.cardText}>
+                <Text style={styles.cardTextMain}>{user.first_name}, {user.current_location}</Text>
+                <Text style={styles.cardTextTagline}>~{user.tagline}~{"\n"}</Text>
+                <Text style={styles.cardTextCars}>EVs: {user.cars.length}{"\n"}</Text>
+                <Text style={styles.cardTextBio}>{user.bio}{"\n"}</Text>
+              </View>
+            </View>
           </Animated.View>
         )
       } else {
         return(
           <Animated.View
             key={user.id} style={[{opacity: this.nextCardOpacity, transform: [{scale: this.nextCardScale}], height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, borderRadius: 20, position: 'absolute'}]}>
-            <Image
-              style={{ width: 300, height: 300, borderRadius: 20}}
-              source={require('../assets/images/nikola_.png')}
-              />
+            <View style={styles.card}>
+              <Image
+                style={styles.cardImage}
+                source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/N.Tesla.JPG'}}
+                />
+            </View>
           </Animated.View>
         )
       }
@@ -307,10 +313,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
   welcomeContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
     marginBottom: 20,
   },
@@ -319,7 +325,7 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: 10,
   },
   getStartedContainer: {
     flex: 1,
@@ -327,55 +333,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 50,
   },
-  userInfoName: {
-    fontSize: 30,
-    lineHeight: 30,
-    textAlign: 'center'
-  },
-  userInfoLocation: {
-    fontSize: 25,
-    lineHeight: 25,
-    textAlign: 'center',
-  },
-  userInfoTagline: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    lineHeight: 20,
-    textAlign: 'center'
-  },
-  userInfoBio: {
-    fontSize: 16,
-    lineHeight: 16,
-    textAlign: 'center'
-  },
-  userInfoCar: {
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'left',
-    marginHorizontal: 10
-  },
-  yesButton: {
-    margin: 20,
-    backgroundColor: 'green',
+  card: {
+    height: 500,
+    width: 350,
     borderRadius: 12,
-    fontSize: 20,
-    width: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    alignItems: 'flex-end'
+    justifyContent: 'center',
+    backgroundColor: '#79F7D6',
+    overflow: 'hidden'
   },
-  noButton: {
-    margin: 20,
-    backgroundColor: 'red',
-    borderRadius: 12,
-    fontSize: 20,
-    width: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    alignItems: 'flex-start'
-  },
-  buttons: {
+  cardImage: {
     flex: 1,
-    flexDirection: 'row'
+    backgroundColor: '#FFFFFF',
+  },
+  cardText: {
+    margin: 10,
+    backgroundColor: 'transparent'
+  },
+  cardTextMain: {
+    textAlign: 'left',
+    fontSize: 30,
+    fontWeight: '800',
+    color: 'white',
+    backgroundColor: 'transparent'
+  },
+  cardTextTagline: {
+    textAlign: 'left',
+    fontSize: 16,
+    color: 'white',
+    fontStyle: 'italic',
+    backgroundColor: 'transparent'
+  },
+  cardTextBio: {
+    textAlign: 'left',
+    fontSize: 16,
+    color: 'white',
+    backgroundColor: 'transparent'
+  },
+  cardTextCars: {
+    textAlign: 'left',
+    fontSize: 16,
+    fontWeight: "bold",
+    color: 'white',
+    backgroundColor: 'transparent'
   }
 });

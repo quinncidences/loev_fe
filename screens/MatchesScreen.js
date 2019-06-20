@@ -18,16 +18,12 @@ export default class MatchesScreen extends React.Component {
       <View style={styles.container}>
 
           <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/LOEV-dev.png')
-                  : require('../assets/images/LOEV-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
+
           </View>
           <Card />
+
+          <View style={{height: 30}}>
+          </View>
 
       </View>
     )
@@ -35,28 +31,31 @@ export default class MatchesScreen extends React.Component {
 }
 
 MatchesScreen.navigationOptions = {
-  header: null,
+  headerTitle: (
+    <Image
+      source={require('../assets/images/LOEV-dev.png')}
+      style={{width: 100,height: 80, resizeMode: 'contain', marginTop: 3, marginLeft: 10}}
+      />
+  )
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    paddingTop: 30,
+    backgroundColor: '#FFF',
   },
   welcomeContainer: {
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
+    backgroundColor: '#FFF'
   },
   welcomeImage: {
     width: 100,
     height: 80,
     resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: 10,
   },
   getStartedContainer: {
     alignItems: 'center',

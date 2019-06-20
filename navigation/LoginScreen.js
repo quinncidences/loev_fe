@@ -51,16 +51,8 @@ export default class LoginScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.welcomeContainer}>
           <Image
-            source={
-              __DEV__
-                ? require('../assets/images/LOEV-dev.png')
-                : require('../assets/images/LOEV-prod.png')
-            }
+            source={require('../assets/images/LOEV-dev.png')}
             style={styles.welcomeImage}
-          />
-          <Image
-            style={{width: 70, height: 80}}
-            source={require('../assets/images/loevlogobulb.png')}
           />
         <Text>{"\n"} We Found Love in a Gasless Place</Text>
         </View>
@@ -91,6 +83,7 @@ export default class LoginScreen extends React.Component {
               onPress={() => this.loginFetch()}
               title='Login'
               color='white'
+              fontWeight='bold'
               />
           </View>
         </View>
@@ -139,7 +132,7 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: 10,
   },
   getStartedContainer: {
     alignItems: 'center',
@@ -161,31 +154,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
   },
   navigationFilename: {
@@ -211,8 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#79F7D6',
     borderWidth: 1,
     borderRadius: 12,
-    fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center'
   }
 });

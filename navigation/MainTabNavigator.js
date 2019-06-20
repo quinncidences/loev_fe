@@ -19,25 +19,23 @@ MessagesStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={Platform.OS === 'ios' ? `ios-chatbubbles` : 'md-chatbubbles'}
     />
   ),
 };
+
+
 
 const MatchesStack = createStackNavigator({
   Matches: MatchesScreen,
 });
 
 MatchesStack.navigationOptions = {
-  tabBarLabel: 'MATCHES',
+  tabBarLabel: 'LO.EV',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
     />
   ),
 };
@@ -51,7 +49,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-navigate' : 'md-compass'}
     />
   ),
 };
