@@ -1,3 +1,5 @@
+//need to adjust for when I get to the end of the users and there are no more options for a logged_user to look at.
+
 import React from 'react';
 import { Button, AsyncStorage, ScrollView, StyleSheet, View, Image, Platform, TouchableOpacity, Text, Dimensions, Animated, PanResponder } from 'react-native';
 import { MonoText } from '../components/StyledText';
@@ -75,14 +77,12 @@ export default class UserCard extends React.Component {
           Animated.spring(this.position, {
             toValue:{x: SCREEN_WIDTH + 100, y: gestureState.dy}
           }).start(() => {
-            console.log("LIKED")
             this.userAction('yes')
           })
         } else if(gestureState.dx < -130){
           Animated.spring(this.position, {
             toValue:{x: -SCREEN_WIDTH - 100, y: gestureState.dy}
           }).start(() => {
-            console.log("DISLIKED")
             this.userAction('no')
           })
         } else {
@@ -104,21 +104,32 @@ export default class UserCard extends React.Component {
   }
 
   checkLikesInitial(user_id, logged_user) {
-    let userlikes = logged_user.likes.filter((like) => (like.liked_id === user.id))
+    let userlikes = logged_user.likes.filter((like) => (like.liked_id === user_id))
     return userlikes.length != 0 ? true : false
   }
 
   checkDislikesInitial(user_id, logged_user) {
-    let userdislikes = logged_user.dislikes.filter((dislike) => dislike.disliked_id === user.id)
+    let userdislikes = logged_user.dislikes.filter((dislike) => dislike.disliked_id === user_id)
     return userdislikes.length != 0 ? true : false
   }
 
   initialUserFilter(users) {
+    //need to filter out the logged in user
     let logged_user = users[0]
-    users_filtered = users.filter((user) => {return user.gender === logged_user.preference.gender
-       && user.preference.relationship === logged_user.preference.relationship
-       && !this.checkLikesInitial(user.id, logged_user) && !this.checkDislikesInitial(user.id, logged_user)
-    })
+    if (logged_user.preference.gender === 'any') {
+      users_filtered = users.filter(
+        (user) => {
+          return user.preference.relationship === logged_user.preference.relationship
+         && !this.checkLikesInitial(user.id, logged_user) && !this.checkDislikesInitial(user.id, logged_user)
+       })
+    } else {
+      users_filtered = users.filter(
+        (user) => {
+          return user.gender === logged_user.preference.gender
+        && user.preference.relationship === logged_user.preference.relationship
+        && !this.checkLikesInitial(user.id, logged_user) && !this.checkDislikesInitial(user.id, logged_user)
+      })
+    }
     this.setState ({
       users: users_filtered,
       logged_in_user: users[0],
@@ -161,13 +172,18 @@ export default class UserCard extends React.Component {
   }
 
   userFilter(newIndex) {
-    //need to filter out the actual logged_in_user
-    if (
-      this.state.users[newIndex].gender != this.state.pref_gender || this.state.users[newIndex].preference.relationship != this.state.pref_relationship || this.checkLikes(newIndex) || this.checkDislikes(newIndex)
-    ) {
-      return true
+    if (this.state.pref_gender === 'any') {
+      if (this.state.users[newIndex].preference.relationship != this.state.pref_relationship || this.checkLikes(newIndex) || this.checkDislikes(newIndex)) {
+        return true
+      } else {
+        return false
+      }
     } else {
-      return false
+      if (this.state.users[newIndex].gender != this.state.pref_gender || this.state.users[newIndex].preference.relationship != this.state.pref_relationship || this.checkLikes(newIndex) || this.checkDislikes(newIndex)) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 
@@ -182,7 +198,6 @@ export default class UserCard extends React.Component {
   }
 
   createLike() {
-    console.log("Hit Create Like")
     fetch('https://loev-be.herokuapp.com/likes', {
       method: 'POST',
       headers: {
@@ -198,7 +213,6 @@ export default class UserCard extends React.Component {
   }
 
   createDislike() {
-    console.log("Hit Create Dislike")
     fetch('https://loev-be.herokuapp.com/dislikes', {
       method: 'POST',
       headers: {
@@ -234,13 +248,15 @@ export default class UserCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyOX0.nrDAbSD3hLsX3c8XxXJh09aarQJ7Ap9GXV7NIE906oE'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4NX0.Z-lrrkB6BvMYaG7Rfu1sy0TbxZx7f1_31BVCHGYMJqM'
       },
       body: JSON.stringify({
         "user_id": this.state.logged_in_user.id,
         "user_name": this.state.logged_in_user.first_name,
+        "user_uri": this.state.logged_in_user.uri,
         "recipient_id": this.state.current_user.id,
         "recipient_name": this.state.current_user.first_name,
+        "recipient_uri": this.state.current_user.uri,
       })
     })
   }
@@ -267,7 +283,7 @@ export default class UserCard extends React.Component {
             <View style={styles.card}>
               <Image
                 style={styles.cardImage}
-                source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/N.Tesla.JPG'}}
+                source={{uri: user.uri}}
                 />
               <View style={styles.cardText}>
                 <Text style={styles.cardTextMain}>{user.first_name}, {user.current_location}</Text>
@@ -285,7 +301,7 @@ export default class UserCard extends React.Component {
             <View style={styles.card}>
               <Image
                 style={styles.cardImage}
-                source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/N.Tesla.JPG'}}
+                source={{uri: user.uri}}
                 />
             </View>
           </Animated.View>
@@ -314,24 +330,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: 10,
-  },
   getStartedContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 50,
   },
   card: {
     height: 500,

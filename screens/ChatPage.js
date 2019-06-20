@@ -17,12 +17,13 @@ class ChatPage extends React.Component {
   }
 
   chatFetch() {
+    console.log("hitChatFetch")
     const chat_id = this.props.navigation.getParam('chat').id
     return fetch('https://loev-be.herokuapp.com/chats/' + chat_id, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0MX0.zsoJgMqpKjB4ZHC2TlXh_IKOou033J4_aKfJDJo1jUc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4NX0.Z-lrrkB6BvMYaG7Rfu1sy0TbxZx7f1_31BVCHGYMJqM'
       }
     })
     .then((res) => res.json())
@@ -45,7 +46,7 @@ class ChatPage extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0MX0.zsoJgMqpKjB4ZHC2TlXh_IKOou033J4_aKfJDJo1jUc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4NX0.Z-lrrkB6BvMYaG7Rfu1sy0TbxZx7f1_31BVCHGYMJqM'
       }
     })
     .then((res) => res.json())
@@ -55,11 +56,17 @@ class ChatPage extends React.Component {
 
   renderMessages() {
     const logged_user_id = this.props.navigation.getParam('chat').user_id
-    return this.state.messages.map(message => {
+    if (this.state.messages.length == 0) {
+      return (
+        <Text>No messages yet...be the first!</Text>
+      )
+    } else {
+      return this.state.messages.map(message => {
         return (
           <MessageBox key={message.id} logged={logged_user_id} message={message}/>
         )
-    })
+      })
+    }
   }
 
   createMessage(ev) {
@@ -68,7 +75,7 @@ class ChatPage extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0MX0.zsoJgMqpKjB4ZHC2TlXh_IKOou033J4_aKfJDJo1jUc'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4NX0.Z-lrrkB6BvMYaG7Rfu1sy0TbxZx7f1_31BVCHGYMJqM'
       },
       body: JSON.stringify({
         "user_id": this.props.navigation.getParam('chat').user_id,
@@ -114,7 +121,7 @@ class ChatPage extends React.Component {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 style={styles.image}
-                source={require('../assets/images/nikola_.png')}
+                source={{uri: chat.recipient_uri}}
                 />
               <Text style={styles.user_name}>  {chat.recipient_name}</Text>
             </View>
@@ -131,7 +138,7 @@ class ChatPage extends React.Component {
         <ScrollView>
           {this.renderMessages()}
         </ScrollView>
-        <View style={{flex: 1, height: 60, borderTopWidth:0.75, borderColor: '#e8e8e8'}}>
+        <View style={{height: 60, borderTopWidth:0.75, borderColor: '#e8e8e8'}}>
           <TextInput
             style={styles.footer}
             value={this.state.text}

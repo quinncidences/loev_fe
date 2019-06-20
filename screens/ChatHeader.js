@@ -23,7 +23,7 @@ class ChatHeader extends React.Component {
           <View style={styles.card}>
             <Image
               style={styles.image}
-              source={require('../assets/images/nikola_.png')}
+              source={{uri: this.props.chat.recipient_uri}}
               />
             <Button
               onPress={() => this.toMessage()}
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    margin: 20
+    margin: 5
   },
   card: {
     height: 80,

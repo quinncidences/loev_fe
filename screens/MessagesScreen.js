@@ -60,29 +60,14 @@ MessagesScreen.navigationOptions = {
   headerTitle: (
     <Image
       source={require('../assets/images/LOEV-dev.png')}
-      style={{width: 100,height: 80, resizeMode: 'contain', marginTop: 3, marginLeft: 10}}
+      style={{width: 100,height: 80, resizeMode: 'contain', marginTop: 3}}
       />
   )
 };
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  }
-
-
 });
