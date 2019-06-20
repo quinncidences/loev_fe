@@ -8,7 +8,7 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import MessagesScreen from '../screens/MessagesScreen';
 import MatchesScreen from '../screens/MatchesScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import HotspotsScreen from '../screens/HotspotsScreen';
 
 const MessagesStack = createStackNavigator({
   Messages: MessagesScreen,
@@ -40,11 +40,11 @@ MatchesStack.navigationOptions = {
   ),
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const HotspotsStack = createStackNavigator({
+  Hotspots: HotspotsScreen,
 });
 
-SettingsStack.navigationOptions = {
+HotspotsStack.navigationOptions = {
   tabBarLabel: 'HOTSPOTS',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -57,7 +57,7 @@ SettingsStack.navigationOptions = {
 export default createBottomTabNavigator({
   MessagesStack,
   MatchesStack,
-  SettingsStack,
+  HotspotsStack,
   },
   {
     initialRouteName: 'MatchesStack'

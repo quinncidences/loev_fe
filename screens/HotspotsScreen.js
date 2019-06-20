@@ -4,7 +4,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Image, Platform, TouchableOpacity, Text } from 'react-native';
 import { MonoText } from '../components/StyledText';
 
-export default function SettingsScreen() {
+export default function Hotspots() {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -46,7 +46,7 @@ export default function SettingsScreen() {
   );
 }
 
-SettingsScreen.navigationOptions = {
+Hotspots.navigationOptions = {
   headerTitle: (
     <Image
       source={require('../assets/images/LOEV-dev.png')}
